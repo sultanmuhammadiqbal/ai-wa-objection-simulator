@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI WA Objection Simulator</title>
+    <script src="https://cdn.jsdelivr.net/npm/@unocss/runtime"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen font-sans">
+
+    <div class="container mx-auto max-w-5xl px-4 py-10">
+        <!-- Header -->
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-extrabold text-green-400 mb-2">🚀 AI WhatsApp Funnel & Objection Handler</h1>
+            <p class="text-gray-400 text-lg">Ubah penolakan calon pembeli jadi closing massal di localhost lu.</p>
+        </div>
+
+        <!-- FASE 1: GENERATOR SKRIP -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+            <div class="lg:col-span-1 bg-gray-800 p-6 rounded-2xl shadow-xl border border-gray-700 h-fit">
+                <h2 class="text-xl font-bold text-white mb-4 border-b border-gray-700 pb-2">Konfigurasi Produk</h2>
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Pilih Template Contoh:</label>
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" onclick="isiTemplate('sneakers')" class="bg-gray-700 hover:bg-gray-600 text-xs text-green-400 font-medium py-1.5 px-3 rounded-lg border border-gray-600 transition cursor-pointer">👟 Sneakers</button>
+                        <button type="button" onclick="isiTemplate('skincare')" class="bg-gray-700 hover:bg-gray-600 text-xs text-green-400 font-medium py-1.5 px-3 rounded-lg border border-gray-600 transition cursor-pointer">✨ Skincare</button>
+                        <button type="button" onclick="isiTemplate('diet')" class="bg-gray-700 hover:bg-gray-600 text-xs text-green-400 font-medium py-1.5 px-3 rounded-lg border border-gray-600 transition cursor-pointer">🥗 Katering Diet</button>
+                    </div>
+                </div>
+
+                <form hx-post="/generate-handler" hx-target="#result-container" hx-indicator="#loading">
+                    <div class="mb-5">
+                        <label class="block text-sm font-semibold mb-2 text-gray-300">Deskripsi Produk & Penawaran</label>
+                        <textarea id="product_description" name="product_description" rows="5" class="w-full p-3 bg-gray-900 border border-gray-700 rounded-xl focus:outline-none focus:border-green-500 text-sm text-white placeholder-gray-500" placeholder="Klik template di atas atau ketik di sini..." required></textarea>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-semibold mb-2 text-gray-300">Tipe Keberatan Konsumen</label>
+                        <select id="objection_type" name="objection_type" class="w-full p-3 bg-gray-900 border border-gray-700 rounded-xl focus:outline-none focus:border-green-500 text-sm text-white" required>
+                            <option value="Harga Kemahalan">💰 Harga Kemahalan / Nego Sadis</option>
+                            <option value="Ragu Kualitas/Keaslian">🛡️ Ragu Kualitas / Takut Barang KW</option>
+                            <option value="Ghosting/Pikir-pikir dulu">👻 Ghosting / Mau Pikir-pikir Dulu</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-gray-950 font-bold py-3 px-4 rounded-xl transition duration-200 shadow-lg shadow-green-500/20 cursor-pointer">Generate Solusi Closing 🔥</button>
+                </form>
+            </div>
+
+            <div class="lg:col-span-2 bg-gray-800 p-6 rounded-2xl shadow-xl border border-gray-700">
+                <h2 class="text-xl font-bold mb-4 text-white border-b border-gray-700 pb-2">Skrip Balasan Hasil AI</h2>
+                <div id="loading" class="htmx-indicator text-center py-12">
+                    <div class="animate-spin inline-block w-8 h-8 border-[3px] border-current border-t-transparent text-green-400 rounded-full mb-2"></div>
+                    <p class="text-sm text-gray-400">Si Otak AI lagi ngeracik skrip...</p>
+                </div>
+                <div id="result-container">
+                    <p class="text-gray-500 text-center py-20">Pilih template di kiri, tentukan keberatan, lalu klik generate buat lihat keajaibannya.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FASE 2 & 3: ARENA SIMULASI + RAPOR COACH -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Chat Window (Kiri/Tengah) -->
+            <div class="lg:col-span-2 bg-gray-800 rounded-2xl shadow-xl border border-gray-700 overflow-hidden flex flex-col h-[520px]">
+                <div class="bg-gradient-to-r from-green-600 to-emerald-700 px-6 py-4 flex justify-between items-center shrink-0 bg-green-600">
+                    <div>
+                        <h2 class="text-lg font-bold text-white">🤼 Arena Simulasi CS vs Buyer Rewel</h2>
+                        <p class="text-[11px] text-green-100">Jangan baper sama AI-nya.</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <select id="buyer_persona" class="bg-gray-900 text-xs p-2 rounded-lg border border-green-500 text-white focus:outline-none">
+                            <option value="Emak-Emak Pelit Nego Sadis">👵 Tipe: Emak-Emak Pelit Nego Sadis</option>
+                            <option value="Anak Muda Skeptis Takut KW">🛹 Tipe: Anak Muda Skeptis Takut KW</option>
+                            <option value="Si Ghosting Hobi Pikir-Pikir">👻 Tipe: Si Ghosting Hobi Pikir-Pikir</option>
+                        </select>
+                        <button type="button" onclick="mulaiSimulasi()" class="bg-gray-900 hover:bg-black text-green-400 text-xs font-bold py-2 px-3 rounded-lg transition border border-green-400 cursor-pointer">Mulai 🔄</button>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-gray-950/70 flex-1 flex flex-col justify-between overflow-hidden">
+                    <div id="chat-box" class="flex-1 overflow-y-auto space-y-4 p-4 bg-gray-900 rounded-xl border border-gray-800 flex flex-col">
+                        <p class="text-gray-500 text-center my-auto">Klik "Mulai" di kanan atas buat memancing chat pembeli.</p>
+                    </div>
+
+                    <form id="chat-form" hx-post="/chat-simulation" hx-target="#chat-box" hx-swap="beforeend" hx-indicator="#chat-loading" class="mt-3 flex gap-2 shrink-0" onsubmit="setTimeout(() => document.getElementById('user_msg').value='', 50)">
+                        <input type="hidden" id="hidden_prod" name="product_desc">
+                        <input type="hidden" id="hidden_persona" name="persona">
+                        <input type="text" id="user_msg" name="user_message" class="flex-1 p-3 bg-gray-900 border border-gray-700 rounded-xl focus:outline-none focus:border-green-500 text-sm text-white" placeholder="Ketik balasan CS lu..." disabled>
+                        <button type="submit" id="send-btn" class="bg-green-500 hover:bg-green-600 text-gray-950 font-bold px-4 py-3 rounded-xl text-sm transition disabled:opacity-50 cursor-pointer" disabled>Kirim</button>
+                    </form>
+                    <div id="chat-loading" class="htmx-indicator text-[11px] text-green-400 mt-1 text-center animate-pulse">💬 Konsumen lagi ngetik balasan maut...</div>
+                </div>
+            </div>
+
+            <!-- Panel Rapor Evaluasi (Kanan) -->
+            <div class="lg:col-span-1 bg-gray-800 p-6 rounded-2xl shadow-xl border border-gray-700 flex flex-col h-[520px]">
+                <h2 class="text-xl font-bold text-white mb-3 border-b border-gray-700 pb-2">📋 Coach Review</h2>
+                
+                <div class="flex-1 overflow-y-auto" id="evaluation-container">
+                    <p class="text-gray-500 text-center py-20 text-sm">Selesaikan chat di sebelah kiri, lalu klik tombol evaluasi di bawah buat ngeliat rapor lu.</p>
+                </div>
+
+                <button id="eval-btn" hx-post="/evaluate-chat" hx-target="#evaluation-container" hx-indicator="#eval-loading" class="w-full mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-xl transition duration-200 shadow-lg disabled:opacity-50 shrink-0 cursor-pointer" disabled>
+                    📊 Akhiri & Minta Rapor
+                </button>
+                <div id="eval-loading" class="htmx-indicator text-center text-xs text-blue-400 mt-2 animate-pulse">🕵️‍♂️ Direktur Sales lagi ngebedah blunder lu...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Receh buat ngisi template instan -->
+    <script>
+        function isiTemplate(tipe) {
+            const textarea = document.getElementById('product_description');
+            const templates = {
+                sneakers: "Sepatu sneakers lokal kasual bahan kanvas premium 12oz tebal, sol karet asli anti-slip cetakan pabrik, bonus tali tambahan dan pembersih. Harga normal Rp 350.000, khusus minggu ini diskon jadi Rp 199.000.",
+                skincare: "Serum wajah glowing anti-aging dengan kandungan Niacinamide 10% murni dan Centella Asiatica. Teruji klinis memudarkan noda hitam dalam 7 hari, aman buat bumil dan kulit sensitif. Harga Rp 149.000 per botol.",
+                diet: "Katering makan sehat program diet defisit kalori, dimasak tanpa MSG dan rendah minyak oleh chef profesional. Setiap box dihitung kalorinya secara presisi (max 450 kkal). Paket langganan sebulan Rp 1.200.000 gratis ongkir."
+            };
+            if (templates[tipe]) textarea.value = templates[tipe];
+        }
+
+        function mulaiSimulasi() {
+            const prod = document.getElementById('product_description').value;
+            if (!prod) {
+                alert('Woi, isi dulu Deskripsi Produk di atas!');
+                return;
+            }
+            const persona = document.getElementById('buyer_persona').value;
+            document.getElementById('hidden_prod').value = prod;
+            document.getElementById('hidden_persona').value = persona;
+            
+            document.getElementById('chat-box').innerHTML = `<div class="bg-blue-500/10 border border-blue-500/20 p-2 rounded-lg text-[11px] text-blue-400 text-center font-mono">MUTASI MEMORI: Menghadapi ${persona}</div>`;
+            document.getElementById('evaluation-container').innerHTML = `<p class="text-gray-500 text-center py-20 text-sm">Lagi tanding chat... Rapor bakal siap pas lu klik tombol di bawah.</p>`;
+            
+            document.getElementById('user_msg').disabled = false;
+            document.getElementById('send-btn').disabled = false;
+            document.getElementById('eval-btn').disabled = false;
+
+            htmx.ajax('POST', '/chat-init', {target: '#chat-box', swap: 'beforeend', values: {product_desc: prod, persona: persona}});
+        }
+
+        function copyToClipboard(elementId, btn) {
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = `
+                    <svg class="w-4 h-4 text-green-400 inline-block mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                    <span>Copied!</span>
+                `;
+                btn.classList.add('border-green-500/50', 'text-green-400');
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.classList.remove('border-green-500/50', 'text-green-400');
+                }, 2000);
+            });
+        }
+    </script>
+    <style>
+        .htmx-indicator { display: none; }
+        .htmx-request .htmx-indicator { display: block; }
+    </style>
+</body>
+</html>
